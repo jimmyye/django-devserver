@@ -67,7 +67,12 @@ class Command(BaseCommand):
     args = '[optional port number, or ipaddr:port]'
 
     # Validation is called explicitly each time the server is reloaded.
-    requires_model_validation = False
+    def __init__(self):
+        if hasattr(self, 'requires_system_checks'):
+            self.requires_system_checks = False
+        else:
+            self.requires_model_validation = False  # Django < 1.7
+        super(Command, self).__init__()
 
     def run_from_argv(self, argv):
         parser = self.create_parser(argv[0], argv[1])
