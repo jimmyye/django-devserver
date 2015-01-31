@@ -104,7 +104,7 @@ else:
 
         def process_complete(self, request):
             if hasattr(request, 'devserver_profiler_run') and (DEVSERVER_AUTO_PROFILE or request.devserver_profiler_run):
-                from cStringIO import StringIO
+                from io import StringIO
                 out = StringIO()
                 if (DEVSERVER_AUTO_PROFILE):
                     request.devserver_profiler.disable_by_count()
