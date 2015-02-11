@@ -2,10 +2,12 @@ from devserver.modules import DevServerModule
 from devserver.utils.time import ms_from_timedelta
 from devserver.settings import DEVSERVER_AUTO_PROFILE
 
+from django.views.generic.base import View
 from datetime import datetime
 
 import functools
 import gc
+import inspect
 
 
 class ProfileSummaryModule(DevServerModule):
@@ -116,9 +118,13 @@ else:
             return
         profiler.add_function(func)
         if func.func_closure:
-            for cell in func.func_closure:
-                if hasattr(cell.cell_contents, 'func_code'):
-                    _unwrap_closure_and_profile(profiler, cell.cell_contents)
+            if func.func_globals['__name__'] == 'django.views.generic.base':
+                for cell in func.func_closure:
+                    target = cell.cell_contents
+                    if inspect.isclass(target) and View in inspect.getmro(target):
+                        for name, value in inspect.getmembers(target):
+                            if name[0] != '_' and inspect.ismethod(value):
+                                _unwrap_closure_and_profile(profiler, value)
 
     class devserver_profile(object):
         def __init__(self, follow=[]):
