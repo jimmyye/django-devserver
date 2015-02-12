@@ -53,7 +53,7 @@ class SlimWSGIRequestHandler(WSGIRequestHandler):
         ]
         args = list(args) + [
             ms_from_timedelta(duration) / 1000,
-            sum(float(c.get('time', 0)) for c in queries) * 1000,
+            sum(float(c.get('time', 0)) for c in queries),
             len(queries),
         ]
         return WSGIRequestHandler.log_message(self, format, *args)

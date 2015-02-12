@@ -100,7 +100,7 @@ class DatabaseStatTracker(DatabaseStatTracker):
                 if message is not None:
                     self.logger.debug(message, rowcount=self.cursor.rowcount, duration=duration)
 
-            if not (debug_toolbar or django_settings.DEBUG):
+            if version >= 1.6 or not (debug_toolbar or django_settings.DEBUG):
                 self.db.queries.append({
                     'sql': formatted_sql,
                     'time': duration,
@@ -122,7 +122,7 @@ class DatabaseStatTracker(DatabaseStatTracker):
                 self.logger.debug(message, duration=duration)
                 self.logger.debug('Found %s matching rows', self.cursor.rowcount, duration=duration, id='query')
 
-            if not (debug_toolbar or settings.DEBUG):
+            if version >= 1.6 or not (debug_toolbar or settings.DEBUG):
                 self.db.queries.append({
                     'sql': '%s times: %s' % (len(param_list), sql),
                     'time': duration,
@@ -165,4 +165,4 @@ class SQLSummaryModule(DevServerModule):
             self.logger.info('%(calls)s queries with %(dupes)s duplicates' % dict(
                 calls=num_queries,
                 dupes=num_queries - len(unique),
-            ), duration=sum(float(c.get('time', 0)) for c in queries) * 1000)
+            ), duration=sum(float(c.get('time', 0)) for c in queries))

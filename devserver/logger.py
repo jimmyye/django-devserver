@@ -33,7 +33,7 @@ class GenericLogger(object):
             tpl_bits.append(self.style.SQL_FIELD('[%s]' % self.module.logger_name))
         if duration:
             tpl_bits.append(self.style.SQL_KEYWORD('(%dms)' % duration))
-        if rowcount >= 0:
+        if rowcount and rowcount >= 0:
             tpl_bits.append('[%d rows]' % rowcount)
 
         if args:
