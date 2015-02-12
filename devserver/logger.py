@@ -23,6 +23,7 @@ class GenericLogger(object):
     def log(self, message, *args, **kwargs):
         id = kwargs.pop('id', None)
         duration = kwargs.pop('duration', None)
+        rowcount = kwargs.pop('rowcount', None)
         level = kwargs.pop('level', logging.INFO)
 
         tpl_bits = []
@@ -32,6 +33,8 @@ class GenericLogger(object):
             tpl_bits.append(self.style.SQL_FIELD('[%s]' % self.module.logger_name))
         if duration:
             tpl_bits.append(self.style.SQL_KEYWORD('(%dms)' % duration))
+        if rowcount >= 0:
+            tpl_bits.append('[%d rows]' % rowcount)
 
         if args:
             message = message % args

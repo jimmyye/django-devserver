@@ -86,7 +86,6 @@ class DatabaseStatTracker(DatabaseStatTracker):
                 if settings.DEVSERVER_TRUNCATE_SQL:
                     message = truncate_sql(message, aggregates=settings.DEVSERVER_TRUNCATE_AGGREGATES)
                 message = sqlparse.format(message, reindent=True, keyword_case='upper')
-                self.logger.debug(message)
 
         start = datetime.now()
 
@@ -98,8 +97,8 @@ class DatabaseStatTracker(DatabaseStatTracker):
 
             if self.logger and (not settings.DEVSERVER_SQL_MIN_DURATION
                     or duration > settings.DEVSERVER_SQL_MIN_DURATION):
-                if self.cursor.rowcount >= 0 and message is not None:
-                    self.logger.debug('Found %s matching rows', self.cursor.rowcount, duration=duration)
+                if message is not None:
+                    self.logger.debug(message, rowcount=self.cursor.rowcount, duration=duration)
 
             if not (debug_toolbar or django_settings.DEBUG):
                 self.db.queries.append({
