@@ -101,7 +101,7 @@ class DatabaseStatTracker(DatabaseStatTracker):
                     self.logger.debug(message, rowcount=self.cursor.rowcount, duration=duration)
 
             if version >= 1.6 or not (debug_toolbar or django_settings.DEBUG):
-                self.db.queries.append({
+                self.db.queries_log.append({
                     'sql': formatted_sql,
                     'time': duration,
                 })
@@ -123,7 +123,7 @@ class DatabaseStatTracker(DatabaseStatTracker):
                 self.logger.debug('Found %s matching rows', self.cursor.rowcount, duration=duration, id='query')
 
             if version >= 1.6 or not (debug_toolbar or settings.DEBUG):
-                self.db.queries.append({
+                self.db.queries_log.append({
                     'sql': '%s times: %s' % (len(param_list), sql),
                     'time': duration,
                 })
